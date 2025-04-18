@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <title>Recommended Cars</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 80%;
+        }
+        th, td {
+            border: 1px solid red;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: red;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Recommended Cars</h1>
+    <table>
+        <tr>
+            <th>Make</th>
+            <th>Model</th>
+            <th>Year</th>
+            <th>Price</th>
+            <th>Description</th>
+        </tr>
+        {% for car in recommendations %}
+            <tr>
+                <td>{{ car.Make }}</td>
+                <td>{{ car.Model }}</td>
+                <td>{{ car.Year }}</td>
+                <td>${{ car.Price }}</td>
+                <td>{{ car.Description }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    
+</body>
+</html>

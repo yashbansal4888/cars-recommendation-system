@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Recommendation System</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-image: url('../static/bg.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        form {
+            margin: 60px auto;
+            width: 80%;
+            max-width: 1200px;
+            height: auto;
+            padding: 20px;
+            border-radius: 20px;
+            background-color: rgba(17, 64, 64, 0.5);
+        }
+        .form-group {
+            width: calc(33%);
+            display: inline-block;
+            margin-bottom: 20px;
+            vertical-align: top;
+        }
+        .form-group label,
+        .form-group select,
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="range"] {
+            width: 90%;
+            margin: 10px;
+            font-size: 16px;
+        }
+        .form-group label {
+            color: red;
+            font-weight: bold;
+            font-size: 24px;
+        }
+        select,
+        input[type="text"],
+        input[type="number"],
+        input[type="range"] {
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            margin-right: 10px;
+            margin-left: 10px;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            color: white;
+        }
+        .checkbox-group label {
+            margin-right: 20px;
+            font-size: 18px;
+        }
+        .checkbox-group input {
+            margin-right: 10px;
+        }
+        input[type="submit"] {
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: darkred;
+        }
+        .slider-value,
+        .label-limit {
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        /* Media Query for smaller screens */
+        @media only screen and (max-width: 768px) {
+            form {
+                width: 80%;
+                margin: 0 auto;
+                font-size: 18px;
+            }
+
+            .form-group {
+                width: 100%;
+                display: inline-block;
+                margin-bottom: 20px;
+                vertical-align: top;
+            }
+            .checkbox-group {
+                display: block;
+                width: 100%;
+                margin: 0 auto;
+            }
+            .checkbox-group label {
+                margin-bottom: 5px;
+                display: block;
+            }
+            .label-limit {
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to "CarMatch" (A simple Car Recommendation System)</h1>
+    <form action="/results" method="POST">
+        <div class="form-group">
+            <label for="make">Make</label>
+            <select id="make" name="make" onchange="updateModels()" required>
+                <option value="">Select Make</option>
+                <!-- Populate options dynamically with JavaScript -->
+                <option value="Toyota">Toyota</option>
+                <option value="Suzuki">Suzuki</option>
+                <option value="Daihatsu">Daihatsu</option>
+                <option value="Honda">Honda</option>
+                <option value="Hyundai">Hyundai</option>
+                <option value="Mitsubishi">Mitsubishi</option>
+                <option value="KIA">KIA</option>
+                <option value="Changan">Changan</option>
+                <option value="FAW">FAW</option>
+                <option value="Mercedes">Mercedes</option>
+                <option value="Chevrolet">Chevrolet</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="model">Model</label>
+            <select id="model" name="model" required>
+                <option value="">Select Model</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="fuel">Fuel</label>
+            <select id="fuel" name="fuel" required>
+                <option value="Petrol">Petrol</option>
+                <option value="Diesel">Diesel</option>
+                <option value="CNG">CNG</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="age">Age</label>
+            <input type="range" id="age" name="age" min="0" max="20" value="0" oninput="updateAgeValue(this.value)">
+            <div class="slider-value" id="ageValue">0</div>
+        </div>
+        <div class="form-group">
+            <label for="kms_driven">KM's driven:</label>
+            <input type="range" id="kms_driven" name="kms_driven" min="1" max="550000" value="0" oninput="updateDrivenValue(this.value)" required>
+            <div class="slider-value" id="drivenValue">1</div>
+        </div>
+        <div class="form-group">
+            <label for="price">Price</label>
+            <input type="range" id="price" name="price" min="180000" max="5000000" value="0" oninput="updatePriceValue(this.value)" required>
+            <div class="slider-value" id="priceValue">180000</div>
+        </div>
+        <div class="form-group">
+            <label for="car_documents">Car Documents</label>
+            <select id="car_documents" name="car_documents" required>
+                <option value="Original">Original</option>
+                <option value="Duplicate">Duplicate</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="assembly">Assembly</label>
+            <select id="assembly" name="assembly" required>
+                <option value="Imported">Imported</option>
+                <option value="Local">Local</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="transmission">Transmission</label>
+            <select id="transmission" name="transmission" required>
+                <option value="Automatic">Automatic</option>
+                <option value="Manual">Manual</option>
+            </select>
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="air_conditioning" name="air_conditioning" value="1">
+            <label for="air_conditioning">Air Conditioning</label>
+            <input type="checkbox" id="am_fm_radio" name="am_fm_radio" value="1">
+            <label for="am_fm_radio">AM/FM Radio</label>
+            <input type="checkbox" id="power_steering" name="power_steering" value="1">
+            <label for="power_steering">Power Steering</label>
+            <input type="checkbox" id="front_speakers" name="front_speakers" value="1">
+            <label for="front_speakers">Front Speakers</label>
+            <input type="checkbox" id="power_locks" name="power_locks" value="1">
+            <label for="power_locks">Power Locks</label>
+        </div>
+        <div class="label-limit">
+            <label for="limit">Number of the preferred items:</label>
+            <input type="number" id="limit" name="limit" required>
+        </div>
+        <input type="submit" value="Get Recommendations">
+    </form>
+    
+
+    <script>
+        // JavaScript function to update models based on selected make
+        function updateModels() {
+            var makeSelect = document.getElementById("make");
+            var modelSelect = document.getElementById("model");
+            var models = {
+                "Toyota": ["Passo", "Corolla XLI", "Corrolla Altis", "Altis Grande", "Yaris", "Corolla GLI", "Corolla Assista", "Corolla Axio", "Surf", "Prius", "ISIS"],
+                "Suzuki": ["Ravi", "Bolan", "Swift", "Wagon R", "Cultus VXR", "Every", "Baleno", "Mehran VXR", "Alto", "Cervo", "Every Wagon", "Liana", "Mehran VX", "Khyber", "Cultus VXL"],
+                "Daihatsu": ["Move", "Mira", "Terios Kid", "Cuore", "Hijet"],
+                "Honda": ["City IDSI", "City Vario", "Civic Prosmetic", "City IVTEC", "City Aspire", "Civic Oriel", "Civic VTi", "Civic EXi", "Civic VTi Oriel"],
+                "Hyundai": ["Santro"],
+                "Mitsubishi": ["Pajero Mini", "Ek Wagon", "Lancer", "Minicab Bravo", "Minica"],
+                "KIA": ["Picanto", "Classic", "Spectra", "Sportage"],
+                "Changan": ["Karvaan", "Alsvin"],
+                "FAW": ["X-PV", "V2"],
+                "Mercedes": ["E Class", "C Class"],
+                "Chevrolet": ["Joy", "Exclusive"]
+            };
+            var selectedMake = makeSelect.value;
+            modelSelect.innerHTML = '<option value="">Select Model</option>'
+            if (selectedMake in models) {
+                models[selectedMake].forEach(function(model) {
+                    var option = document.createElement("option");
+                    option.text = model;
+                    option.value = model;
+                    modelSelect.appendChild(option);
+                });
+            }
+        }
+
+        // JavaScript function to update age value display
+        function updateAgeValue(value) {
+            document.getElementById("ageValue").innerText = value;
+        }
+
+        // JavaScript function to update km's driven value display
+        function updateDrivenValue(value) {
+            document.getElementById("drivenValue").innerText = value;
+        }
+
+        // JavaScript function to update price value display
+        function updatePriceValue(value) {
+            document.getElementById("priceValue").innerText = value;
+        }
+    </script>
+</body>
+</html>
